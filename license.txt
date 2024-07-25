@@ -1,6 +1,6 @@
 FbMassInviter is a Chrome extension made by Filip Novák
-https://zsf.cz
-https://askfilipshow.com
+Cs: https://zsf.cz
+En: https://askfilipshow.com
 
 
 This file is part of "FbMassInviter".
