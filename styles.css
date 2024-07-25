@@ -1,0 +1,238 @@
+/* Import Roboto Slab font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&display=swap');
+
+body { width: 250px; padding: 4px 18px 12px; font-size: 80%; }
+h1 { font-family: 'Roboto Slab', serif; margin: 0 0 8px; font-size: 17px; }
+h1 a { font-size: 70%; font-weight: 500; color: #b2f; }
+h1 a:hover { color: #82f; }
+button {
+  width: 100%;
+  padding: 10px;
+  margin: 2px 0;
+  cursor: pointer;
+  background: #ededed;
+  border: 1px solid #c5c5c5;
+  color: #000;
+  letter-spacing: 1px;
+  transition: background-color 0.3s;
+}
+button:hover {
+  background-color: #dcdcdc; /* Darkens background by 10% */
+}
+button.active {
+  background: #3d3;
+  border: 1px solid #2a1;
+  color: #000;
+  letter-spacing: 1px;
+  transition: background-color 0.3s;
+}
+.author {
+  color: #000;
+  margin: 20px 0 4px;
+}
+.author a {
+  color: #b2f;
+}
+.author a:hover {
+  color: #82f;
+}
+/** BEGIN CSS NEEDED FOR SWITCH **/
+.on-off-toggle {
+  width: 56px;
+  height: 24px;
+  position: relative;
+  display: inline-block;
+  text-transform: uppercase;
+  float: right;
+  top: 0px;
+}
+
+.on-off-toggle__slider:before {
+  content: '';
+  display: block;
+  background-color: #fff;
+  box-shadow: 0 0 0 1px #949494;
+  bottom: 3px;
+  height: 18px;
+  left: 3px;
+  position: absolute;
+  transition: .4s;
+  width: 18px;
+  z-index: 5;
+  border-radius: 100%;
+}
+
+.on-off-toggle__slider:after {
+  display: block;
+  line-height: 24px;
+  font-size: 12px;
+  font-weight: bold;
+  content: 'cs';
+  color: #000;
+  padding-left: 26px;
+  transition: all 0.4s;
+}
+.on-off-toggle__slider {
+  width: 56px;
+  height: 24px;
+  display: block;
+  border-radius: 34px;
+  background-color: #fd3;
+  transition: background-color 0.4s;
+  cursor: pointer;
+}
+.on-off-toggle__input:checked + .on-off-toggle__slider:after {
+  content: 'en';
+  color: #fff;
+  padding-left: 12px;
+}
+.on-off-toggle__input:checked + .on-off-toggle__slider {
+  background-color: #e6c;
+}
+
+.on-off-toggle__input {
+  /*
+    This way of hiding the default input is better 
+    for accessibility than using display: none;
+  */
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.on-off-toggle__input:checked + .on-off-toggle__slider:before {
+  transform: translateX(32px);
+}
+
+
+/*** END CSS NEEDED FOR SWITCH **/
+
+
+#counter, #time { margin-top: 4px; }
+#version { display: inline; font-weight: 300; }
+#info { margin-bottom: 4px; }
+.bold { font-weight: bold; }
+.green { color: #080; }
+.red { color: #f00; }
+.orange { color: #fa5; }
+.progress-bar {
+  width: 100%;
+  height: 4px;
+  margin-bottom: 6px;
+  background-color: #ededed;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 5px;
+  position: relative;
+}
+.bigbar {
+  height: 12px;
+}
+.progress-bar-inner {
+  height: 100%;
+  background-color: #3d3;
+  position: absolute;
+  top: 0;
+}
+.progress-bar-inner-negative {
+  height: 100%;
+  background-color: #f59;
+  position: absolute;
+  top: 0;
+}
+.progress-bar-marker {
+  width: 0;
+  height: 0;
+  border-left: 4.5px solid transparent;
+  border-right: 4.5px solid transparent;
+  border-bottom: 8px solid #000;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: -5px;
+  margin-bottom: 8px;
+}
+.martop10 {
+  margin-top: 10px;
+}
+.bar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin: 8px 0 1px; /* Updated margin */
+}
+.bar-container, .t-bar-container {
+  height: 106px;
+}
+.bar {
+  width: 24.66%; /* Updated width */
+  height: 100%;
+  position: relative;
+  background-color: #ededed;
+}
+.bar-inner {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+.bar-label {
+text-align: center;
+font-size: 70px;
+color: #fff;
+font-weight: 900;
+cursor: default;
+}
+.bar-value {
+  position: absolute;
+  top: -20px;
+  width: 100%;
+  text-align: center;
+  font-size: 12px;
+  color: #000;
+}
+.small-button {
+  padding: 0px 5px;
+  width: 50px;
+  float: right;
+  font-size: 12px;
+  cursor: pointer;
+  background: #ededed;
+  border: 1px solid #c5c5c5;
+  color: #000;
+  letter-spacing: 1px;
+  transition: background-color 0.3s;
+}
+.small-button:hover {
+  background-color: #dcdcdc; /* Darkens background by 10% */
+}
+.t-bar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin: 0 0 8px; /* Updated margin */
+}
+.t-bar {
+  width: 3.7%;
+  height: 100%;
+  position: relative;
+  background-color: #ededed;
+}
+.t-bar-inner {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+/* Přidejte tento styl pro tooltip */
+.tooltip {
+  position: absolute;
+  background-color: #fff;
+  border: 1px solid #b3b3b3;
+  color: #000;
+  padding: 5px;
+  border-radius: 5px;
+  visibility: hidden;
+  z-index: 1000;
+}
+.t-bar:hover, .bar:hover {
+  background-color: #d1d1d1;
+}

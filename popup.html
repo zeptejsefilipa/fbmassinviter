@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>FbMassInviter by ZSF</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<h1>FbMassInviter v<span id="versionValue"></span> <div class="on-off-toggle">
+    <input class="on-off-toggle__input" type="checkbox" id="bopis" />
+    <label for="bopis" class="on-off-toggle__slider"></label>
+  </div>
+</h1>
+  <button id="toggle">START</button>
+  <button id="scrollToggle">NAČTENO <span class="bold">0</span></button>
+  <div id="time">Dokončení načtených: <span class="bold" id="completionEstimateValue"></span></div>
+  <div id="counter">Právě pozvaných: <span class="bold" id="counterValue">0</span> Předtím: <span class="bold" id="lastCounterValue">0</span></div>
+  <!-- New bar graph container -->
+<div id="tooltipNewBarGraph" class="tooltip"></div><div class="bar-container"><div class="bar" data-value="0"><div class="bar-inner bar-inner-1-0" id="bar1-0"></div><div class="bar-label">1</div></div><div class="bar" data-value="0"><div class="bar-inner bar-inner-2-1" id="bar2-1"></div><div class="bar-label">2</div></div><div class="bar" data-value="0"><div class="bar-inner bar-inner-3-2" id="bar3-2"></div><div class="bar-label">3</div></div><div class="bar" data-value="0"><div class="bar-inner bar-inner-4-3" id="bar4-3"></div><div class="bar-label">4</div></div></div>
+
+  <!-- New 24 bar graph container -->
+<div class="t-bar-container"><!-- Přidejte tooltip --><div id="tooltip" class="tooltip"></div><div class="t-bar" data-value="0"><div class="t-bar-inner" id="barTenMinute0"></div></div><div class="t-bar" data-value="0"><div class="t-bar-inner" id="barTenMinute1"></div></div><div class="t-bar" data-value="0"><div class="t-bar-inner" id="barTenMinute2"></div></div><div class="t-bar" data-value="0"><div class="t-bar-inner" id="barTenMinute3"></div></div><div class="t-bar" data-value="0"><div class="t-bar-inner" id="barTenMinute4"></div></div><div class="t-bar" data-value="0"><div class="t-bar-inner" id="barTenMinute5"></div></div><div class="t-bar" data-value="0"><div class="t-bar-inner" id="barTenMinute6"></div></div><div class="t-bar" data-value="0"><div class="t-bar-inner" id="barTenMinute7"></div></div><div class="t-bar" data-value="0"><div class="t-bar-inner" id="barTenMinute8"></div></div><div class="t-bar" data-value="0"><div class="t-bar-inner" id="barTenMinute9"></div></div><div class="t-bar" data-value="0"><div class="t-bar-inner" id="barTenMinute10"></div></div><div class="t-bar" data-value="0"><div class="t-bar-inner" id="barTenMinute11"></div></div><div class="t-bar" data-value="0"><div class="t-bar-inner" id="barTenMinute12"></div></div><div class="t-bar" data-value="0"><div class="t-bar-inner" id="barTenMinute13"></div></div><div class="t-bar" data-value="0"><div class="t-bar-inner" id="barTenMinute14"></div></div><div class="t-bar" data-value="0"><div class="t-bar-inner" id="barTenMinute15"></div></div><div class="t-bar" data-value="0"><div class="t-bar-inner" id="barTenMinute16"></div></div><div class="t-bar" data-value="0"><div class="t-bar-inner" id="barTenMinute17"></div></div><div class="t-bar" data-value="0"><div class="t-bar-inner" id="barTenMinute18"></div></div><div class="t-bar" data-value="0"><div class="t-bar-inner" id="barTenMinute19"></div></div><div class="t-bar" data-value="0"><div class="t-bar-inner" id="barTenMinute20"></div></div><div class="t-bar" data-value="0"><div class="t-bar-inner" id="barTenMinute21"></div></div><div class="t-bar" data-value="0"><div class="t-bar-inner" id="barTenMinute22"></div></div><div class="t-bar" data-value="0"><div class="t-bar-inner" id="barTenMinute23"></div></div></div>
+
+  <div id="remainingInvites">Zóna banu: <span class="bold" id="remainingInvitesValue">0</span></div>
+  <div class="progress-bar bigbar">
+    <div class="progress-bar-inner" id="progressBarRemainingPositive"></div>
+    <div class="progress-bar-inner-negative" id="progressBarRemainingNegative"></div>
+  </div>
+  <div class="progress-bar-marker"></div>
+
+  <div id="invited24Hours">Pozvaných za 24 hodin: <span class="bold" id="invited24HoursValue">0</span></div>
+  <div class="progress-bar"><div class="progress-bar-inner" id="progressBar24Hours"></div></div>
+  <div id="invited4Hours">Pozvaných za 4 hodiny: <span class="bold" id="invited4HoursValue">0</span></div>
+  <div class="progress-bar">
+    <div class="progress-bar-inner" id="progressBar4Hours"></div>
+  </div>
+  <div id="totalSinceMilestone">Pozvaných celkem: <span class="bold" id="totalSinceMilestoneValue">0</span><button id="resetMilestone" class="small-button">reset</button></div>
+  <div class="progress-bar">
+    <div class="progress-bar-inner" id="progressBarMilestone"></div>
+  </div>
+  <div class="author">Autor: Filip Novák <a href="https://zsf.cz/fbmassinviter" target="_blank">ZeptejSeFilipa</a></div>
+  <script src="popup.js"></script>
+</body>
+</html>

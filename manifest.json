@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "FbMassInviter",
+  "version": "1.1",
+  "description": "Automatizace pozvánek cílená na návštěvníky Facebook stránek, kteří u příspěvků klikli na 'To se mi líbí'.",
+  "icons": {
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://*.facebook.com/*"],
+      "js": ["content.js"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon-inactive.png",
+      "48": "icons/icon-inactive.png",
+      "128": "icons/icon-inactive.png"
+    }
+  }
+}
