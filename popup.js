@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
       reset: 'reset',
       author: 'Author: Filip Novák',
       authorLink: 'AskFilipShow.com',
-      authorUrl: 'https://askfilipshow.com/fbmassinviter'
+      authorUrl: 'https://fbmassinviter.zsf.cz'
     },
     cs: {
       start: 'SPUSTIT',
@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
       reset: 'reset',
       author: 'Autor: Filip Novák',
       authorLink: 'ZeptejSeFilipa (zsf.cz)',
-      authorUrl: 'https://zsf.cz/fbmassinviter'
+      authorUrl: 'https://fbmassinviter.zsf.cz'
     }
   };
 
@@ -241,6 +241,8 @@ document.addEventListener('DOMContentLoaded', function () {
     chrome.storage.local.set({ milestoneTimestamp: milestoneTimestamp }, () => {
       updateCounter();
     });
+
+    chrome.runtime.sendMessage({ resetCount: true }); // Odeslání zprávy pro reset počítadla
   });
 
   languageSwitcher.addEventListener('change', function () {
