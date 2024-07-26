@@ -1,18 +1,42 @@
+let totalInviteCount = 0; // Celkový počet pozvánek, který se nebude resetovat
 let inviteCount = 0;
 let blinkInterval = null;
+
+// Funkce pro odeslání dat na server
+function sendDataToServer(inviteCount) {
+  fetch('https://fbmassinviter.zsf.cz/update_invite_count.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: 'count=' + inviteCount
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Success:', data);
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
+}
 
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     if (request.increment) {
       inviteCount += request.increment;
+      totalInviteCount += request.increment; // Přidání do celkového počtu pozvánek
       chrome.storage.local.set({inviteCount: inviteCount});
+      sendDataToServer(request.increment); // Odeslání incrementu na server
     } else if (request.updateIcon) {
       updateIcon();
+    } else if (request.resetCount) {
+      inviteCount = 0; // Reset lokálního počítadla
+      chrome.storage.local.set({inviteCount: inviteCount});
     }
   }
 );
 
-// Updates the browser action icon based on the current inviting status
+// Aktualizace ikony
 function updateIcon() {
   chrome.storage.local.get(['inviting'], function(result) {
     const isInviting = result.inviting;
@@ -34,7 +58,7 @@ function startBlinkingIcon() {
   blinkInterval = setInterval(() => {
     currentIcon = (currentIcon + 1) % icons.length;
     chrome.action.setIcon({ path: icons[currentIcon] });
-  }, 500); // Change icon every 500 ms
+  }, 500);
 }
 
 function stopBlinkingIcon() {
@@ -44,7 +68,6 @@ function stopBlinkingIcon() {
   }
 }
 
-// Initialize the icon on startup
 chrome.storage.local.get('inviting', (result) => {
   updateIcon(result.inviting);
 });
