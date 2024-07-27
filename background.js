@@ -6,20 +6,6 @@ chrome.runtime.onMessage.addListener(
     if (request.increment) {
       inviteCount += request.increment;
       chrome.storage.local.set({inviteCount: inviteCount});
-
-      // Send the invite count to the server
-      fetch('https://fbmassinviter.zsf.cz/update_invite_count.php', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ user_id: 'unique_user_id', increment: request.increment })
-      })
-      .then(response => response.json())
-      .then(data => {
-        console.log('Updated server with invite count:', data);
-      })
-      .catch(error => console.error('Error updating server:', error));
     } else if (request.updateIcon) {
       updateIcon();
     }
