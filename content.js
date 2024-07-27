@@ -25,8 +25,17 @@ function injectCSS() {
   document.head.appendChild(style);
 }
 
+chrome.storage.local.get(['user_id'], function(result) {
+  if (!result.user_id) {
+    const userId = 'user_' + Math.random().toString(36).substr(2, 9);
+    chrome.storage.local.set({ user_id: userId });
+  }
+});
+
 async function autoInvite() {
   injectCSS();
+
+  const userId = (await chrome.storage.local.get(['user_id'])).user_id;
 
   while (true) {
     const result = await chrome.storage.local.get(['inviting']);
@@ -47,6 +56,20 @@ async function autoInvite() {
       const inviteTimestamps = countResult.inviteTimestamps || [];
       inviteTimestamps.push(Date.now());
       await chrome.storage.local.set({inviteCount: inviteCount, inviteTimestamps: inviteTimestamps});
+
+      // Send the invite count to the server
+      fetch('https://fbmassinviter.zsf.cz/update_invite_count.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ user_id: userId, increment: 1 })
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Updated server with invite count:', data);
+      })
+      .catch(error => console.error('Error updating server:', error));
     }
 
     const scrollContainer = document.querySelector('.x1tbbn4q');
