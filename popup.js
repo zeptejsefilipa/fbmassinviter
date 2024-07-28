@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const MAX_INVITES_24HOURS = 7000;  // Maximum number of invites allowed in a 24-hour period
     const MAX_INVITES_MILESTONE = 20000;  // Maximum number of invites allowed since a certain milestone
     const MAX_INVITES_REMAINING = 1200;  // Maximum number of remaining invites before hitting a limit
-    const MAX_VISIBLE_INVITES = 750;  // Maximum number of visible invites in the UI
+    const MAX_VISIBLE_INVITES = 9900;  // Maximum number of visible invites in the UI
     const MAX_BAR_HEIGHT = 1000;  // Max value for 1h bar in pixels; over-limit values color the column red
     const MAX_TEN_MINUTE_BARS = 24;  // Maximum number of ten-minute bars in the graph
     const TEN_MINUTE_INTERVAL = 10 * 60 * 1000;  // Interval for each ten-minute bar in milliseconds (10 minutes)
@@ -294,17 +294,20 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Function to update the number of visible invites
+    // Function to update the number of visible invites in various languages
     function updateVisibleInvites() {
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             chrome.scripting.executeScript({
                 target: { tabId: tabs[0].id },
                 func: () => {
-                    return document.querySelectorAll('div[role="button"][aria-label="Pozvat"], div[role="button"][aria-label="Invite"], div[role="button"][aria-label="邀请"], div[role="button"][aria-label="Invitar"], div[role="button"][aria-label="आमंत्रित करना"], div[role="button"][aria-label="دعوة"], div[role="button"][aria-label="আমন্ত্রণ জানানো"], div[role="button"][aria-label="Convidar"], div[role="button"][aria-label="Пригласить"], div[role="button"][aria-label="招待する"], div[role="button"][aria-label="ਨਿਮੰਤਰਣ ਦੇਣਾ"], div[role="button"][aria-label="دعوت دینا"], div[role="button"][aria-label="Mengundang"], div[role="button"][aria-label="Einladen"], div[role="button"][aria-label="Inviter"], div[role="button"][aria-label="Kualika"], div[role="button"][aria-label="आमंत्रित करणे"], div[role="button"][aria-label="ఆహ్వానించు"], div[role="button"][aria-label="அழைக்க"], div[role="button"][aria-label="Davet etmek"], div[role="button"][aria-label="Mời"], div[role="button"][aria-label="초대하다"], div[role="button"][aria-label="Invitare"], div[role="button"][aria-label="เชิญ"], div[role="button"][aria-label="આમંત્રित કરવું"], div[role="button"][aria-label="Zaprosić"], div[role="button"][aria-label="Запросити"], div[role="button"][aria-label="ಆಹ್ವಾನಿಸು"], div[role="button"][aria-label="Menjemput"], div[role="button"][aria-label="دعوت کردن"], div[role="button"][aria-label="Gayyata"]').length;
+                    return document.querySelectorAll('div[role="button"][aria-label="Pozvat"], div[role="button"][aria-label="Invite"], div[role="button"][aria-label="邀请"], div[role="button"][aria-label="Invitar"], div[role="button"][aria-label="आमंत्रित करना"], div[role="button"][aria-label="دعوة"], div[role="button"][aria-label="আমন্ত্রণ জানানো"], div[role="button"][aria-label="Convidar"], div[role="button"][aria-label="Пригласить"], div[role="button"][aria-label="招待する"], div[role="button"][aria-label="ਨਿਮੰਤਰਣ ਦੇਣਾ"], div[role="button"][aria-label="دعوت دینا"], div[role="button"][aria-label="Mengundang"], div[role="button"][aria-label="Einladen"], div[role="button"][aria-label="Inviter"], div[role="button"][aria-label="Kualika"], div[role="button"][aria-label="आमंत्रित करणे"], div[role="button"][aria-label="ఆహ్వానించు"], div[role="button"][aria-label="அழைக்க"], div[role="button"][aria-label="Davet etmek"], div[role="button"][aria-label="Mời"], div[role="button"][aria-label="초대하다"], div[role="button"][aria-label="Invitare"], div[role="button"][aria-label="เชิญ"], div[role="button"][aria-label="આમંત્રિત કરવું"], div[role="button"][aria-label="Zaprosić"], div[role="button"][aria-label="Запросити"], div[role="button"][aria-label="ಆಹ್ವಾನಿಸು"], div[role="button"][aria-label="Menjemput"], div[role="button"][aria-label="دعوت کردن"], div[role="button"][aria-label="Gayyata"]').length;
                 }
             }, (results) => {
                 if (results && results.length > 0) {
-                    const visibleInvites = results[0].result;
+                    let visibleInvites = results[0].result;
+                    if (visibleInvites > MAX_VISIBLE_INVITES) {
+                        visibleInvites = MAX_VISIBLE_INVITES;
+                    }
                     scrollToggleButton.innerHTML = `${translations[currentLanguage].invitesLoaded}<span class="bold">${visibleInvites}</span>`;
                     updateCompletionEstimate();
                 }
