@@ -24,17 +24,44 @@ document.addEventListener('DOMContentLoaded', function () {
     let invitingAnimationInterval;
     let scrollingInterval;
 
-    // Function to load translations from a JSON file
-    async function loadTranslations(lang) {
-        const response = await fetch(`./languages/${lang}.json`);
-        const translations = await response.json();
-        return translations;
-    }
-
-    // Example usage
-    loadTranslations('cs').then(translations => {
-        console.log(translations.start); // Output: SPUSTIT
-    });
+    const translations = {
+        en: {
+            start: 'START',
+            stopped: 'STOPPED (ban prevention)',
+            running: 'RUNNING (stop?)',
+            inviting: 'INVITING',
+            invitesLoaded: 'LOADED: ',
+            completionEstimate: 'Completion estimate: ',
+            currentlyInvited: 'Currently invited: ',
+            previouslyInvited: 'Previously: ',
+            invited24Hours: 'Invited in 24 hours: ',
+            invited4Hours: 'Invited in 4 hours: ',
+            totalSinceMilestone: 'Total invited: ',
+            remainingInvites: 'Ban zone: ',
+            done: 'Done',
+            author: 'Author: Filip Novák',
+            authorLink: 'AskFilipShow.com',
+            authorUrl: 'https://askfilipshow.com/fbmassinviter'
+        },
+        cs: {
+            start: 'SPUSTIT',
+            stopped: 'ZASTAVENO (prevence banu)',
+            running: 'PROBÍHÁ (zastavit?)',
+            inviting: 'Probíhá zvaní',
+            invitesLoaded: 'NAČTENO: ',
+            completionEstimate: 'Dokončení načtených: ',
+            currentlyInvited: 'Právě pozvaných: ',
+            previouslyInvited: 'Předtím: ',
+            invited24Hours: 'Pozvaných za 24 hodin: ',
+            invited4Hours: 'Pozvaných za 4 hodiny: ',
+            totalSinceMilestone: 'Pozvaných celkem: ',
+            remainingInvites: 'Zóna banu: ',
+            done: 'Dokončeno',
+            author: 'Autor: Filip Novák',
+            authorLink: 'ZeptejSeFilipa (zsf.cz)',
+            authorUrl: 'https://zsf.cz/fbmassinviter'
+        }
+    };
 
     let currentLanguage = 'cs';
 
@@ -267,28 +294,14 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Array of supported invite button aria labels in various languages
-    const inviteAriaLabels = [
-        "Pozvat", "Invite", "邀请", "Invitar", "आमंत्रित करना", "دعوة", "আমন্ত্রণ জানানো", 
-        "Convidar", "Пригласить", "招待する", "ਨਿਮੰਤਰਣ ਦੇਣਾ", "دعوت دینا", "Mengundang", 
-        "Einladen", "Inviter", "Kualika", "आमंत्रित करणे", "ఆహ్వానించు", "அழைக்க", 
-        "Davet etmek", "Mời", "초대하다", "Invitare", "เชิญ", "આમંત્રિત કરવું", "Zaprosić", 
-        "Запросити", "ಆಹ್ವಾನಿಸು", "Menjemput", "دعوت کردن", "Gayyata"
-    ];
-
-    // Function to count visible invite buttons based on aria labels
-    function countVisibleInvites() {
-        return inviteAriaLabels.reduce((count, label) => {
-            return count + document.querySelectorAll(`div[role="button"][aria-label="${label}"]`).length;
-        }, 0);
-    }
-
     // Function to update the number of visible invites in various languages
     function updateVisibleInvites() {
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             chrome.scripting.executeScript({
                 target: { tabId: tabs[0].id },
-                func: countVisibleInvites
+                func: () => {
+                    return document.querySelectorAll('div[role="button"][aria-label="Pozvat"], div[role="button"][aria-label="Invite"], div[role="button"][aria-label="邀请"], div[role="button"][aria-label="Invitar"], div[role="button"][aria-label="आमंत्रित करना"], div[role="button"][aria-label="دعوة"], div[role="button"][aria-label="আমন্ত্রণ জানানো"], div[role="button"][aria-label="Convidar"], div[role="button"][aria-label="Пригласить"], div[role="button"][aria-label="招待する"], div[role="button"][aria-label="ਨਿਮੰਤਰਣ ਦੇਣਾ"], div[role="button"][aria-label="دعوت دینا"], div[role="button"][aria-label="Mengundang"], div[role="button"][aria-label="Einladen"], div[role="button"][aria-label="Inviter"], div[role="button"][aria-label="Kualika"], div[role="button"][aria-label="आमंत्रित करणे"], div[role="button"][aria-label="ఆహ్వానించు"], div[role="button"][aria-label="அழைக்க"], div[role="button"][aria-label="Davet etmek"], div[role="button"][aria-label="Mời"], div[role="button"][aria-label="초대하다"], div[role="button"][aria-label="Invitare"], div[role="button"][aria-label="เชิญ"], div[role="button"][aria-label="આમંત્રિત કરવું"], div[role="button"][aria-label="Zaprosić"], div[role="button"][aria-label="Запросити"], div[role="button"][aria-label="ಆಹ್ವಾನಿಸು"], div[role="button"][aria-label="Menjemput"], div[role="button"][aria-label="دعوت کردن"], div[role="button"][aria-label="Gayyata"]').length;
+                }
             }, (results) => {
                 if (results && results.length > 0) {
                     let visibleInvites = results[0].result;
