@@ -1,0 +1,18 @@
+{
+    "start": "START",
+    "stopped": "STOPPED (ban prevention)",
+    "running": "RUNNING (stop?)",
+    "inviting": "INVITING",
+    "invitesLoaded": "LOADED: ",
+    "completionEstimate": "Completion estimate: ",
+    "currentlyInvited": "Currently invited: ",
+    "previouslyInvited": "Previously: ",
+    "invited24Hours": "Invited in 24 hours: ",
+    "invited4Hours": "Invited in 4 hours: ",
+    "totalSinceMilestone": "Total invited: ",
+    "remainingInvites": "Ban zone: ",
+    "done": "Done",
+    "author": "Author: Filip Novák",
+    "authorLink": "AskFilipShow.com",
+    "authorUrl": "https://askfilipshow.com/fbmassinviter"
+}

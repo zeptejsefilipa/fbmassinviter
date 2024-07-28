@@ -1,0 +1,18 @@
+{
+    "start": "SPUSTIT",
+    "stopped": "ZASTAVENO (prevence banu)",
+    "running": "PROBÍHÁ (zastavit?)",
+    "inviting": "Probíhá zvaní",
+    "invitesLoaded": "NAČTENO: ",
+    "completionEstimate": "Dokončení načtených: ",
+    "currentlyInvited": "Právě pozvaných: ",
+    "previouslyInvited": "Předtím: ",
+    "invited24Hours": "Pozvaných za 24 hodin: ",
+    "invited4Hours": "Pozvaných za 4 hodiny: ",
+    "totalSinceMilestone": "Pozvaných celkem: ",
+    "remainingInvites": "Zóna banu: ",
+    "done": "Dokončeno",
+    "author": "Autor: Filip Novák",
+    "authorLink": "ZeptejSeFilipa (zsf.cz)",
+    "authorUrl": "https://zsf.cz/fbmassinviter"
+}
