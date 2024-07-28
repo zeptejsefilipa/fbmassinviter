@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const MAX_INVITES_4HOURS = 1800;  // Maximum number of invites allowed in a 4-hour period
     const MAX_INVITES_24HOURS = 7000;  // Maximum number of invites allowed in a 24-hour period
     const MAX_INVITES_MILESTONE = 20000;  // Maximum number of invites allowed since a certain milestone
-    const MAX_INVITES_REMAINING = 1800;  // Maximum number of remaining invites before hitting a limit
+    const MAX_INVITES_REMAINING = 1200;  // Maximum number of remaining invites before hitting a limit
     const MAX_VISIBLE_INVITES = 750;  // Maximum number of visible invites in the UI
     const MAX_BAR_HEIGHT = 1680;  // Max value represented by px height for 1h bar
     const MAX_TEN_MINUTE_BARS = 24;  // Maximum number of ten-minute bars in the graph
