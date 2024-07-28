@@ -1,11 +1,29 @@
 /* Import Roboto Slab font from Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&display=swap');
 
-body { width: 250px; padding: 4px 18px 12px; font-size: 80%; }
-h1 { font-family: 'Roboto Slab', serif; margin: 0 0 8px; font-size: 17px; }
-h1 a { font-size: 70%; font-weight: 500; color: #b2f; }
-h1 a:hover { color: #82f; }
-button {
+body {
+  width: 250px;
+  padding: 4px 18px 12px;
+  font-size: 80%;
+}
+
+.header {
+  font-family: 'Roboto Slab', serif;
+  margin: 0 0 8px;
+  font-size: 17px;
+}
+
+.header__link {
+  font-size: 70%;
+  font-weight: 500;
+  color: #b2f;
+}
+
+.header__link:hover {
+  color: #82f;
+}
+
+.button {
   width: 100%;
   padding: 10px;
   margin: 2px 0;
@@ -16,28 +34,34 @@ button {
   letter-spacing: 1px;
   transition: background-color 0.3s;
 }
-button:hover {
+
+.button:hover {
   background-color: #dcdcdc; /* Darkens background by 10% */
 }
-button.active {
+
+.button--active {
   background: #3d3;
   border: 1px solid #2a1;
   color: #000;
   letter-spacing: 1px;
   transition: background-color 0.3s;
 }
+
 .author {
   color: #000;
   margin: 20px 0 4px;
 }
-.author a {
+
+.author__link {
   color: #b2f;
 }
-.author a:hover {
+
+.author__link:hover {
   color: #82f;
 }
+
 /** BEGIN CSS NEEDED FOR SWITCH **/
-.on-off-toggle {
+.switch {
   width: 56px;
   height: 24px;
   position: relative;
@@ -47,7 +71,7 @@ button.active {
   top: 0px;
 }
 
-.on-off-toggle__slider:before {
+.switch__slider:before {
   content: '';
   display: block;
   background-color: #fff;
@@ -62,7 +86,7 @@ button.active {
   border-radius: 100%;
 }
 
-.on-off-toggle__slider:after {
+.switch__slider:after {
   display: block;
   line-height: 24px;
   font-size: 12px;
@@ -72,7 +96,8 @@ button.active {
   padding-left: 26px;
   transition: all 0.4s;
 }
-.on-off-toggle__slider {
+
+.switch__slider {
   width: 56px;
   height: 24px;
   display: block;
@@ -81,16 +106,18 @@ button.active {
   transition: background-color 0.4s;
   cursor: pointer;
 }
-.on-off-toggle__input:checked + .on-off-toggle__slider:after {
+
+.switch__input:checked + .switch__slider:after {
   content: 'en';
   color: #fff;
   padding-left: 12px;
 }
-.on-off-toggle__input:checked + .on-off-toggle__slider {
+
+.switch__input:checked + .switch__slider {
   background-color: #e6c;
 }
 
-.on-off-toggle__input {
+.switch__input {
   /*
     This way of hiding the default input is better 
     for accessibility than using display: none;
@@ -100,21 +127,42 @@ button.active {
   cursor: pointer;
 }
 
-.on-off-toggle__input:checked + .on-off-toggle__slider:before {
+.switch__input:checked + .switch__slider:before {
   transform: translateX(32px);
 }
 
-
 /*** END CSS NEEDED FOR SWITCH **/
 
+.counter, .time {
+  margin-top: 4px;
+}
 
-#counter, #time { margin-top: 4px; }
-.versionformat { display: inline; font-weight: 300; font-size: 14px; }
-#info { margin-bottom: 4px; }
-.bold { font-weight: bold; }
-.green { color: #080; }
-.red { color: #f00; }
-.orange { color: #fa5; }
+.version-format {
+  display: inline;
+  font-weight: 300;
+  font-size: 14px;
+}
+
+.info {
+  margin-bottom: 4px;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.text--green {
+  color: #080;
+}
+
+.text--red {
+  color: #f00;
+}
+
+.text--orange {
+  color: #fa5;
+}
+
 .progress-bar {
   width: 100%;
   height: 4px;
@@ -125,22 +173,26 @@ button.active {
   margin-top: 5px;
   position: relative;
 }
-.bigbar {
+
+.progress-bar--big {
   height: 12px;
 }
-.progress-bar-inner {
+
+.progress-bar__inner {
   height: 100%;
   background-color: #3d3;
   position: absolute;
   top: 0;
 }
-.progress-bar-inner-negative {
+
+.progress-bar__inner--negative {
   height: 100%;
   background-color: #f59;
   position: absolute;
   top: 0;
 }
-.progress-bar-marker {
+
+.progress-bar__marker {
   width: 0;
   height: 0;
   border-left: 4.5px solid transparent;
@@ -152,37 +204,41 @@ button.active {
   margin-top: -5px;
   margin-bottom: 8px;
 }
-.martop10 {
+
+.margin-top--10 {
   margin-top: 10px;
 }
+
 .bar-container {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  margin: 8px 0 1px; /* Updated margin */
-}
-.bar-container, .t-bar-container {
+  margin: 8px 0 1px;
   height: 106px;
 }
+
 .bar {
-  width: 24.66%; /* Updated width */
+  width: 24.66%;
   height: 100%;
   position: relative;
   background-color: #ededed;
 }
-.bar-inner {
+
+.bar__inner {
   position: absolute;
   bottom: 0;
   width: 100%;
 }
-.bar-label {
-text-align: center;
-font-size: 70px;
-color: #fff;
-font-weight: 900;
-cursor: default;
+
+.bar__label {
+  text-align: center;
+  font-size: 70px;
+  color: #fff;
+  font-weight: 900;
+  cursor: default;
 }
-.bar-value {
+
+.bar__value {
   position: absolute;
   top: -20px;
   width: 100%;
@@ -190,7 +246,8 @@ cursor: default;
   font-size: 12px;
   color: #000;
 }
-.small-button {
+
+.button--small {
   padding: 0px 5px;
   width: 50px;
   float: right;
@@ -202,27 +259,32 @@ cursor: default;
   letter-spacing: 1px;
   transition: background-color 0.3s;
 }
-.small-button:hover {
+
+.button--small:hover {
   background-color: #dcdcdc; /* Darkens background by 10% */
 }
+
 .t-bar-container {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  margin: 0 0 8px; /* Updated margin */
+  margin: 0 0 8px;
+  height: 106px;
 }
+
 .t-bar {
   width: 3.7%;
   height: 100%;
   position: relative;
   background-color: #ededed;
 }
-.t-bar-inner {
+
+.t-bar__inner {
   position: absolute;
   bottom: 0;
   width: 100%;
 }
-/* Přidejte tento styl pro tooltip */
+
 .tooltip {
   position: absolute;
   background-color: #fff;
@@ -233,6 +295,7 @@ cursor: default;
   visibility: hidden;
   z-index: 1000;
 }
+
 .t-bar:hover, .bar:hover {
   background-color: #d1d1d1;
 }
