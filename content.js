@@ -1,7 +1,9 @@
+// Function to pause execution for a given number of milliseconds
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+// Function to inject custom CSS styles into the page
 function injectCSS() {
   const css = `
     .x1tbbn4q .xe8uvvx { font-size: 14px; }
@@ -25,6 +27,7 @@ function injectCSS() {
   document.head.appendChild(style);
 }
 
+// Retrieve or generate a user ID and store it locally
 chrome.storage.local.get(['user_id'], function(result) {
   if (!result.user_id) {
     const userId = 'user_' + Math.random().toString(36).substr(2, 9);
@@ -32,10 +35,12 @@ chrome.storage.local.get(['user_id'], function(result) {
   }
 });
 
+// Function to format a number with spaces for better readability
 function formatNumber(number) {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 }
 
+// Main function to automate the invitation process
 async function autoInvite() {
   injectCSS();
 
@@ -45,15 +50,16 @@ async function autoInvite() {
     const result = await chrome.storage.local.get(['inviting']);
     if (!result.inviting) return;
 
-    const inviteButtons = document.querySelectorAll('div[aria-label="Pozvat"][role="button"]');
+    const inviteButtons = document.querySelectorAll('div[aria-label="Invite"][role="button"]');
 
     for (let button of inviteButtons) {
       if (!(await chrome.storage.local.get(['inviting'])).inviting) return;
 
       button.click();
-      await sleep(2000);
+      // Wait for 3 seconds between individual clicks
+      await sleep(3000);
 
-      // Increase the counter in storage and add timestamp
+      // Increase the invite count in storage and add a timestamp
       const countResult = await chrome.storage.local.get(['inviteCount', 'inviteTimestamps']);
       let inviteCount = countResult.inviteCount || 0;
       inviteCount++;
@@ -84,8 +90,10 @@ async function autoInvite() {
       scrollContainer.scrollBy(0, window.innerHeight);
     }
 
+    // Wait for 2 seconds before the next loop iteration
     await sleep(2000);
   }
 }
 
+// Start the invitation process
 autoInvite();

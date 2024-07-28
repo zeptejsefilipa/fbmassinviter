@@ -1,32 +1,49 @@
 {
+  // The version of the manifest file format
   "manifest_version": 3,
+
+  // The name of the Chrome extension
   "name": "FbMassInviter",
+
+  // The version of the extension
   "version": "1.1",
-  "description": "Automatizace pozvánek cílená na návštěvníky Facebook stránek, kteří u příspěvků klikli na 'To se mi líbí'.",
+
+  // A brief description of the extension
+  "description": "Automation of invitations targeting visitors of Facebook pages who clicked 'Like' on posts.",
+
+  // Icons for the extension in different sizes
   "icons": {
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
+
+  // Permissions required by the extension
   "permissions": [
-    "activeTab",
-    "scripting",
-    "storage"
+    "activeTab",   // Access to the active tab
+    "scripting",   // Scripting API to execute scripts
+    "storage"      // Access to Chrome's storage
   ],
+
+  // Background service worker script
   "background": {
     "service_worker": "background.js"
   },
+
+  // Content scripts that run on specified webpages
   "content_scripts": [
     {
-      "matches": ["https://*.facebook.com/*"],
-      "js": ["content.js"]
+      "matches": ["https://*.facebook.com/*"],  // URLs where the content script will run
+      "js": ["content.js"]                      // The content script file
     }
   ],
+
+  // Configuration for the browser action (popup)
   "action": {
-    "default_popup": "popup.html",
+    "default_popup": "popup.html",  // The HTML file for the popup
     "default_icon": {
-      "16": "icons/icon-inactive.png",
-      "48": "icons/icon-inactive.png",
-      "128": "icons/icon-inactive.png"
+      "16": "icons/icon-inactive.png",  // Icon for 16x16 size
+      "48": "icons/icon-inactive.png",  // Icon for 48x48 size
+      "128": "icons/icon-inactive.png"  // Icon for 128x128 size
     }
   }
 }
