@@ -6,7 +6,7 @@
   "name": "FbMassInviter",
 
   // The version of the extension
-  "version": "1.1",
+  "version": "2.0",
 
   // A brief description of the extension
   "description": "Automation of invitations targeting visitors of Facebook pages who clicked 'Like' on posts.",

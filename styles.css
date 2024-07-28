@@ -109,7 +109,7 @@ button.active {
 
 
 #counter, #time { margin-top: 4px; }
-#version { display: inline; font-weight: 300; }
+.versionformat { display: inline; font-weight: 300; font-size: 14px; }
 #info { margin-bottom: 4px; }
 .bold { font-weight: bold; }
 .green { color: #080; }
