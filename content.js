@@ -32,6 +32,10 @@ chrome.storage.local.get(['user_id'], function(result) {
   }
 });
 
+function formatNumber(number) {
+  return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+}
+
 async function autoInvite() {
   injectCSS();
 
@@ -55,7 +59,9 @@ async function autoInvite() {
       inviteCount++;
       const inviteTimestamps = countResult.inviteTimestamps || [];
       inviteTimestamps.push(Date.now());
-      await chrome.storage.local.set({inviteCount: inviteCount, inviteTimestamps: inviteTimestamps});
+      await chrome.storage.local.set({inviteCount: inviteCount, inviteTimestamps: inviteTimestamps}, function() {
+        console.log('Invite count:', formatNumber(inviteCount));
+      });
 
       // Send the invite count to the server
       fetch('https://fbmassinviter.zsf.cz/update_invite_count.php', {

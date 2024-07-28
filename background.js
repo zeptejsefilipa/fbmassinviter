@@ -1,11 +1,17 @@
 let inviteCount = 0;
 let blinkInterval = null;
 
+function formatNumber(number) {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+}
+
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     if (request.increment) {
       inviteCount += request.increment;
-      chrome.storage.local.set({inviteCount: inviteCount});
+      chrome.storage.local.set({inviteCount: inviteCount}, function() {
+        console.log('Updated invite count:', formatNumber(inviteCount));
+      });
     } else if (request.updateIcon) {
       updateIcon();
     }

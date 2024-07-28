@@ -90,10 +90,14 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelector('.author').innerHTML = `${t.author} <a href="${t.authorUrl}" target="_blank">${t.authorLink}</a>`;
     }
 
+    function formatNumberWithSpaces(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+    }
+
     function updateCounter() {
         chrome.storage.local.get(['inviteCount', 'lastInviteCount', 'inviteTimestamps', 'remainingInvites', 'milestoneTimestamp'], function (result) {
-            document.getElementById('counterValue').innerText = result.inviteCount || 0;
-            document.getElementById('lastCounterValue').innerText = result.lastInviteCount || 0;
+            document.getElementById('counterValue').innerText = formatNumberWithSpaces(result.inviteCount || 0);
+            document.getElementById('lastCounterValue').innerText = formatNumberWithSpaces(result.lastInviteCount || 0);
 
             if (result.milestoneTimestamp) {
                 milestoneTimestamp = result.milestoneTimestamp;
@@ -108,10 +112,10 @@ document.addEventListener('DOMContentLoaded', function () {
             const totalSinceMilestone = inviteTimestamps.filter(timestamp => timestamp > milestoneTimestamp).length;
             const remainingInvites = MAX_INVITES_4HOURS - invitesIn4Hours;
 
-            document.getElementById('invited24HoursValue').innerText = invitesIn24Hours;
-            document.getElementById('invited4HoursValue').innerText = invitesIn4Hours;
-            document.getElementById('totalSinceMilestoneValue').innerText = totalSinceMilestone;
-            document.getElementById('remainingInvitesValue').innerText = remainingInvites;
+            document.getElementById('invited24HoursValue').innerText = formatNumberWithSpaces(invitesIn24Hours);
+            document.getElementById('invited4HoursValue').innerText = formatNumberWithSpaces(invitesIn4Hours);
+            document.getElementById('totalSinceMilestoneValue').innerText = formatNumberWithSpaces(totalSinceMilestone);
+            document.getElementById('remainingInvitesValue').innerText = formatNumberWithSpaces(remainingInvites);
 
             const progressBar4Hours = document.getElementById('progressBar4Hours');
             const progressPercentage4Hours = Math.min((invitesIn4Hours / MAX_INVITES_4HOURS) * 100, 100);
@@ -400,7 +404,7 @@ document.addEventListener('DOMContentLoaded', function () {
             resetToggleButton();
         }
         if (result.scrolling) {
-            scrollToggleButton.innerHTML = `${translations[currentLanguage].invitesLoaded}<span class="bold">${result.visibleInvites || 0}</span>`;
+            scrollToggleButton.innerHTML = `${translations[currentLanguage].invitesLoaded}<span class="bold">${formatNumberWithSpaces(result.visibleInvites || 0)}</span>`;
             scrollToggleButton.classList.add('active');
             startScrolling();
         } else {
