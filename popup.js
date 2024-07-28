@@ -300,7 +300,7 @@ document.addEventListener('DOMContentLoaded', function () {
             chrome.scripting.executeScript({
                 target: { tabId: tabs[0].id },
                 func: () => {
-                    return document.querySelectorAll('div[aria-label="Invite"][role="button"]').length;
+                    return document.querySelectorAll('div[aria-label="Pozvat"][role="button"], div[aria-label="Invite"][role="button"]').length;
                 }
             }, (results) => {
                 if (results && results.length > 0) {

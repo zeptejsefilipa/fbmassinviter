@@ -50,7 +50,8 @@ async function autoInvite() {
     const result = await chrome.storage.local.get(['inviting']);
     if (!result.inviting) return;
 
-    const inviteButtons = document.querySelectorAll('div[aria-label="Invite"][role="button"]');
+    const inviteButtons = document.querySelectorAll('div[aria-label="Pozvat"][role="button"], div[aria-label="Invite"][role="button"]');
+
 
     for (let button of inviteButtons) {
       if (!(await chrome.storage.local.get(['inviting'])).inviting) return;
