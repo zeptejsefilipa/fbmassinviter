@@ -1,89 +1,65 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
     const toggleButton = document.getElementById('toggle');
     const scrollToggleButton = document.getElementById('scrollToggle');
     const versionValue = document.getElementById('versionValue');
+    const languageSwitcher = document.getElementById('bopis');
 
-    const MAX_INVITES_4HOURS = 1800;  // Maximum number of invites allowed in a 4-hour period
-    const MAX_INVITES_24HOURS = 7000;  // Maximum number of invites allowed in a 24-hour period
-    const MAX_INVITES_MILESTONE = 20000;  // Maximum number of invites allowed since a certain milestone
-    const MAX_INVITES_REMAINING = 1200;  // Maximum number of remaining invites before hitting a limit
-    const MAX_VISIBLE_INVITES = 9900;  // Maximum number of visible invites in the UI
-    const MAX_BAR_HEIGHT = 1200;  // Max value for 1h bar in pixels; over-limit values color the column red
-    const MAX_TEN_MINUTE_BARS = 24;  // Maximum number of ten-minute bars in the graph
-    const TEN_MINUTE_INTERVAL = 10 * 60 * 1000;  // Interval for each ten-minute bar in milliseconds (10 minutes)
-    const TEN_MINUTE_BAR_MAX_VALUE = 200;  // Max value represented by px height for 10m t-bar, over-limit values color the column red
-    const languageSwitcher = document.getElementById('bopis');  // Reference to the language switcher element in the popup
+    const MAX_INVITES_4HOURS = 1800;
+    const MAX_INVITES_24HOURS = 7000;
+    const MAX_INVITES_MILESTONE = 20000;
+    const MAX_INVITES_REMAINING = 1200;
+    const MAX_VISIBLE_INVITES = 9900;
+    const MAX_BAR_HEIGHT = 1200;
+    const MAX_TEN_MINUTE_BARS = 24;
+    const TEN_MINUTE_INTERVAL = 10 * 60 * 1000;
+    const TEN_MINUTE_BAR_MAX_VALUE = 200;
 
     const colors = [
         '#fe6ee5', '#fc6ee8', '#fa6eec', '#f76ef0', '#f46ef4', '#f06ef8', '#ed6dfb', '#e86dfe',
         '#e36bff', '#de6aff', '#d869ff', '#d067ff', '#ca65ff', '#c262ff', '#bc5fff', '#b55cff',
         '#af58ff', '#af58ff', '#a34dff', '#9d46ff', '#973eff', '#9236ff', '#8d2eff', '#8a26ff'
-    ];  // Array of color codes used for the bar graph representation
+    ];
 
-    let milestoneTimestamp = new Date('2024-07-13T13:00:00').getTime(); // Milestone time
+    let milestoneTimestamp = new Date('2024-07-13T13:00:00').getTime();
     let invitingAnimationInterval;
     let scrollingInterval;
 
-    const translations = {
-        en: {
-            start: 'START',
-            stopped: 'STOPPED (ban prevention)',
-            running: 'RUNNING (stop?)',
-            inviting: 'INVITING',
-            invitesLoaded: 'LOADED: ',
-            completionEstimate: 'Completion estimate: ',
-            currentlyInvited: 'Currently invited: ',
-            previouslyInvited: 'Previously: ',
-            invited24Hours: 'Invited in 24 hours: ',
-            invited4Hours: 'Invited in 4 hours: ',
-            totalSinceMilestone: 'Total invited: ',
-            remainingInvites: 'Ban zone: ',
-            done: 'Done',
-            author: 'Author: Filip Novák',
-            authorLink: 'AskFilipShow.com',
-            authorUrl: 'https://askfilipshow.com/fbmassinviter'
-        },
-        cs: {
-            start: 'SPUSTIT',
-            stopped: 'ZASTAVENO (prevence banu)',
-            running: 'PROBÍHÁ (zastavit?)',
-            inviting: 'Probíhá zvaní',
-            invitesLoaded: 'NAČTENO: ',
-            completionEstimate: 'Dokončení načtených: ',
-            currentlyInvited: 'Právě pozvaných: ',
-            previouslyInvited: 'Předtím: ',
-            invited24Hours: 'Pozvaných za 24 hodin: ',
-            invited4Hours: 'Pozvaných za 4 hodiny: ',
-            totalSinceMilestone: 'Pozvaných celkem: ',
-            remainingInvites: 'Zóna banu: ',
-            done: 'Dokončeno',
-            author: 'Autor: Filip Novák',
-            authorLink: 'ZeptejSeFilipa (zsf.cz)',
-            authorUrl: 'https://zsf.cz/fbmassinviter'
-        }
-    };
-
     let currentLanguage = 'cs';
+    let translations = {};
 
-    // Function to save the selected language preference
+    async function loadLanguage(language) {
+        try {
+            const response = await fetch(chrome.runtime.getURL(`lang/${language}.json`));
+            translations = await response.json();
+        } catch (error) {
+            console.error('Failed to load language file:', error);
+        }
+    }
+
     function saveLanguagePreference(language) {
         chrome.storage.local.set({ selectedLanguage: language });
     }
 
-    // Function to load the selected language preference
-    function loadLanguagePreference() {
-        chrome.storage.local.get(['selectedLanguage'], function (result) {
+    async function loadLanguagePreference() {
+        try {
+            const result = await chrome.storage.local.get(['selectedLanguage']);
             if (result.selectedLanguage) {
                 currentLanguage = result.selectedLanguage;
                 languageSwitcher.checked = (currentLanguage === 'en');
             }
+            await loadLanguage(currentLanguage);
             translatePageAndUpdateValues();
-        });
+        } catch (error) {
+            console.error('Failed to load language preference:', error);
+        }
     }
 
-    // Function to translate the text content of the popup based on the selected language
-    function translatePage() {
-        const t = translations[currentLanguage];
+    async function translatePage() {
+        if (!translations || Object.keys(translations).length === 0) {
+            console.error('Translations not loaded');
+            return;
+        }
+        const t = translations;
         scrollToggleButton.innerHTML = `${t.invitesLoaded}<span class="bold">0</span>`;
         document.getElementById('time').innerHTML = `${t.completionEstimate}<span class="bold" id="completionEstimateValue"></span>`;
         document.getElementById('counter').innerHTML = `${t.currentlyInvited}<span class="bold" id="counterValue">0</span> ${t.previouslyInvited}<span class="bold" id="lastCounterValue">0</span>`;
@@ -94,14 +70,13 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelector('.author').innerHTML = `${t.author} <a href="${t.authorUrl}" target="_blank">${t.authorLink}</a>`;
     }
 
-    // Function to format numbers with spaces for better readability
     function formatNumberWithSpaces(x) {
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
     }
 
-    // Function to update the invite counter and progress bars
-    function updateCounter() {
-        chrome.storage.local.get(['inviteCount', 'lastInviteCount', 'inviteTimestamps', 'remainingInvites', 'milestoneTimestamp'], function (result) {
+    async function updateCounter() {
+        try {
+            const result = await chrome.storage.local.get(['inviteCount', 'lastInviteCount', 'inviteTimestamps', 'remainingInvites', 'milestoneTimestamp']);
             document.getElementById('counterValue').innerText = formatNumberWithSpaces(result.inviteCount || 0);
             document.getElementById('lastCounterValue').innerText = formatNumberWithSpaces(result.lastInviteCount || 0);
 
@@ -153,32 +128,31 @@ document.addEventListener('DOMContentLoaded', function () {
 
             updateBarGraph(inviteTimestamps);
             updateTenMinuteBars(inviteTimestamps);
-            chrome.storage.local.set({ remainingInvites: remainingInvites });
+            await chrome.storage.local.set({ remainingInvites: remainingInvites });
             updateCompletionEstimate();
 
             if (remainingInvites <= 1) {
-                chrome.storage.local.set({ inviting: false }, () => {
-                    updateToggleButtonToStopped();
-                    chrome.runtime.sendMessage({ updateIcon: true });
-                    clearInterval(invitingAnimationInterval);
-                });
+                await chrome.storage.local.set({ inviting: false });
+                updateToggleButtonToStopped();
+                chrome.runtime.sendMessage({ updateIcon: true });
+                clearInterval(invitingAnimationInterval);
             }
             updateVisibleInvites();
-        });
+        } catch (error) {
+            console.error('Failed to update counter:', error);
+        }
     }
 
-    // Function to update the toggle button to show "stopped" state
     function updateToggleButtonToStopped() {
-        const t = translations[currentLanguage];
+        const t = translations;
         toggleButton.innerText = t.stopped;
         toggleButton.style.background = '#e70202';
         toggleButton.style.border = '1px solid #a30101';
         toggleButton.style.color = '#ffffff';
     }
 
-    // Function to reset the toggle button to its default state
     function resetToggleButton() {
-        const t = translations[currentLanguage];
+        const t = translations;
         toggleButton.innerText = t.start;
         toggleButton.classList.remove('active');
         toggleButton.style.background = '';
@@ -186,77 +160,102 @@ document.addEventListener('DOMContentLoaded', function () {
         toggleButton.style.color = '';
     }
 
-    // Function to translate the page and update the UI values
     function translatePageAndUpdateValues() {
         translatePage();
         updateCounter();
-        updateUIBasedOnState(); // Update UI based on the current state after translation
+        updateUIBasedOnState();
     }
 
-    // Load the preferred language on startup
-    loadLanguagePreference();
-
-    // Event listener for the toggle button click
-    toggleButton.addEventListener('click', () => {
-        chrome.storage.local.get(['inviting', 'inviteCount', 'inviteTimestamps', 'remainingInvites'], function (result) {
+    async function loadInitialValues() {
+        try {
+            const result = await chrome.storage.local.get(['inviting', 'inviteCount', 'lastInviteCount', 'inviteTimestamps', 'remainingInvites', 'scrolling', 'milestoneTimestamp']);
             if (result.inviting) {
-                chrome.storage.local.set({
+                toggleButton.innerText = translations.running;
+                toggleButton.classList.add('active');
+            } else {
+                resetToggleButton();
+            }
+            if (result.scrolling) {
+                scrollToggleButton.innerHTML = `${translations.invitesLoaded}<span class="bold">${formatNumberWithSpaces(result.visibleInvites || 0)}</span>`;
+                scrollToggleButton.classList.add('active');
+                startScrolling();
+            } else {
+                scrollToggleButton.innerHTML = `${translations.invitesLoaded}<span class="bold">0</span>`;
+            }
+            if (result.milestoneTimestamp) {
+                milestoneTimestamp = result.milestoneTimestamp;
+            }
+            updateCounter();
+            const manifest = chrome.runtime.getManifest();
+            versionValue.innerText = manifest.version;
+        } catch (error) {
+            console.error('Failed to load initial values:', error);
+        }
+    }
+
+    loadLanguagePreference();
+    loadInitialValues();
+
+    toggleButton.addEventListener('click', async () => {
+        try {
+            const result = await chrome.storage.local.get(['inviting', 'inviteCount', 'inviteTimestamps', 'remainingInvites']);
+            if (result.inviting) {
+                await chrome.storage.local.set({
                     inviting: false,
                     lastInviteCount: result.inviteCount || 0,
                     inviteCount: 0
-                }, () => {
-                    resetToggleButton();
-                    updateCounter();
-                    chrome.runtime.sendMessage({ updateIcon: true });
-                    clearInterval(invitingAnimationInterval);
                 });
+                resetToggleButton();
+                updateCounter();
+                chrome.runtime.sendMessage({ updateIcon: true });
+                clearInterval(invitingAnimationInterval);
             } else {
                 if ((result.remainingInvites || MAX_INVITES_4HOURS) > 1) {
-                    chrome.storage.local.set({ inviting: true }, () => {
-                        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                            chrome.scripting.executeScript({
-                                target: { tabId: tabs[0].id },
-                                files: ['content.js']
-                            });
+                    await chrome.storage.local.set({ inviting: true });
+                    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                        chrome.scripting.executeScript({
+                            target: { tabId: tabs[0].id },
+                            files: ['content.js']
                         });
-                        toggleButton.innerText = translations[currentLanguage].running;
-                        toggleButton.classList.add('active');
-                        chrome.runtime.sendMessage({ updateIcon: true });
                     });
+                    toggleButton.innerText = translations.running;
+                    toggleButton.classList.add('active');
+                    chrome.runtime.sendMessage({ updateIcon: true });
                 } else {
-                    alert(translations[currentLanguage].stopped);
+                    alert(translations.stopped);
                 }
             }
-        });
+        } catch (error) {
+            console.error('Failed to handle toggle button click:', error);
+        }
     });
 
-    // Event listener for the scroll toggle button click
-    scrollToggleButton.addEventListener('click', () => {
-        chrome.storage.local.get(['scrolling'], function (result) {
+    scrollToggleButton.addEventListener('click', async () => {
+        try {
+            const result = await chrome.storage.local.get(['scrolling']);
             if (result.scrolling) {
-                chrome.storage.local.set({ scrolling: false }, () => {
-                    scrollToggleButton.innerHTML = `${translations[currentLanguage].invitesLoaded}<span class="bold">0</span>`;
-                    scrollToggleButton.classList.remove('active');
-                    clearInterval(scrollingInterval);
-                });
+                await chrome.storage.local.set({ scrolling: false });
+                scrollToggleButton.innerHTML = `${translations.invitesLoaded}<span class="bold">0</span>`;
+                scrollToggleButton.classList.remove('active');
+                clearInterval(scrollingInterval);
             } else {
-                chrome.storage.local.set({ scrolling: true }, () => {
-                    scrollToggleButton.innerHTML = `${translations[currentLanguage].invitesLoaded}<span class="bold">0</span>`;
-                    scrollToggleButton.classList.add('active');
-                    startScrolling();
-                });
+                await chrome.storage.local.set({ scrolling: true });
+                scrollToggleButton.innerHTML = `${translations.invitesLoaded}<span class="bold">0</span>`;
+                scrollToggleButton.classList.add('active');
+                startScrolling();
             }
-        });
+        } catch (error) {
+            console.error('Failed to handle scroll toggle button click:', error);
+        }
     });
 
-    // Event listener for the language switcher change
-    languageSwitcher.addEventListener('change', function () {
+    languageSwitcher.addEventListener('change', async function () {
         currentLanguage = languageSwitcher.checked ? 'en' : 'cs';
         saveLanguagePreference(currentLanguage);
+        await loadLanguage(currentLanguage);
         translatePageAndUpdateValues();
     });
 
-    // Function to start the scrolling interval
     function startScrolling() {
         scrollingInterval = setInterval(() => {
             chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -272,17 +271,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
             });
             updateVisibleInvites();
-        }, 500); // Scrolling interval is set to 500 ms (0.5 seconds)
+        }, 500);
     }
 
-    // Function to update the completion estimate for visible invites
     function updateCompletionEstimate() {
         const completionEstimateElement = document.getElementById('completionEstimateValue');
         const visibleInvitesText = scrollToggleButton.innerHTML.match(/<span class="bold">(\d+)<\/span>/);
         const visibleInvites = visibleInvitesText ? parseInt(visibleInvitesText[1]) : 0;
 
         if (visibleInvites <= 0) {
-            completionEstimateElement.innerText = translations[currentLanguage].done;
+            completionEstimateElement.innerText = translations.done;
         } else {
             const secondsRemaining = visibleInvites * 2;
             const minutes = Math.floor(secondsRemaining / 60);
@@ -294,28 +292,37 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Function to update the number of visible invites in various languages
     function updateVisibleInvites() {
+        const labels = [
+            "Pozvat", "Invite", "邀请", "Invitar", "आमंत्रित करना", "دعوة", "আমন্ত্রণ জানানো", "Convidar", 
+            "Пригласить", "招待する", "ਨਿਮੰਤਰਣ ਦੇਣਾ", "دعوت دینا", "Mengundang", "Einladen", "Inviter", 
+            "Kualika", "आमंत्रित करणे", "ఆహ్వానించు", "அழைக்க", "Davet etmek", "Mời", "초대하다", 
+            "Invitare", "เชิญ", "આમંત્રિત કરવું", "Zaprosić", "Запросити", "ಆಹ್ವಾನಿಸು", "Menjemput", 
+            "دعوت کردن", "Gayyata"
+        ];
+
+        const selectors = labels.map(label => `div[role="button"][aria-label="${label}"]`).join(', ');
+
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             chrome.scripting.executeScript({
                 target: { tabId: tabs[0].id },
-                func: () => {
-                    return document.querySelectorAll('div[role="button"][aria-label="Pozvat"], div[role="button"][aria-label="Invite"], div[role="button"][aria-label="邀请"], div[role="button"][aria-label="Invitar"], div[role="button"][aria-label="आमंत्रित करना"], div[role="button"][aria-label="دعوة"], div[role="button"][aria-label="আমন্ত্রণ জানানো"], div[role="button"][aria-label="Convidar"], div[role="button"][aria-label="Пригласить"], div[role="button"][aria-label="招待する"], div[role="button"][aria-label="ਨਿਮੰਤਰਣ ਦੇਣਾ"], div[role="button"][aria-label="دعوت دینا"], div[role="button"][aria-label="Mengundang"], div[role="button"][aria-label="Einladen"], div[role="button"][aria-label="Inviter"], div[role="button"][aria-label="Kualika"], div[role="button"][aria-label="आमंत्रित करणे"], div[role="button"][aria-label="ఆహ్వానించు"], div[role="button"][aria-label="அழைக்க"], div[role="button"][aria-label="Davet etmek"], div[role="button"][aria-label="Mời"], div[role="button"][aria-label="초대하다"], div[role="button"][aria-label="Invitare"], div[role="button"][aria-label="เชิญ"], div[role="button"][aria-label="આમંત્રિત કરવું"], div[role="button"][aria-label="Zaprosić"], div[role="button"][aria-label="Запросити"], div[role="button"][aria-label="ಆಹ್ವಾನಿಸು"], div[role="button"][aria-label="Menjemput"], div[role="button"][aria-label="دعوت کردن"], div[role="button"][aria-label="Gayyata"]').length;
-                }
+                func: (selectors) => {
+                    return document.querySelectorAll(selectors).length;
+                },
+                args: [selectors]
             }, (results) => {
                 if (results && results.length > 0) {
                     let visibleInvites = results[0].result;
                     if (visibleInvites > MAX_VISIBLE_INVITES) {
                         visibleInvites = MAX_VISIBLE_INVITES;
                     }
-                    scrollToggleButton.innerHTML = `${translations[currentLanguage].invitesLoaded}<span class="bold">${visibleInvites}</span>`;
+                    scrollToggleButton.innerHTML = `${translations.invitesLoaded}<span class="bold">${visibleInvites}</span>`;
                     updateCompletionEstimate();
                 }
             });
         });
     }
 
-    // Function to update the bar graph based on invite timestamps
     function updateBarGraph(inviteTimestamps) {
         const now = Date.now();
         const hour = 60 * 60 * 1000;
@@ -331,7 +338,6 @@ document.addEventListener('DOMContentLoaded', function () {
         updateBar('bar4-3', invitesLast4To3Hours);
     }
 
-    // Function to update an individual bar in the bar graph
     function updateBar(barId, value) {
         const barElement = document.getElementById(barId);
         const heightPercentage = Math.min((value / MAX_BAR_HEIGHT) * 100, 100);
@@ -346,7 +352,6 @@ document.addEventListener('DOMContentLoaded', function () {
         barElement.parentNode.dataset.value = value;
     }
 
-    // Function to update the ten-minute bars based on invite timestamps
     function updateTenMinuteBars(inviteTimestamps) {
         const now = Date.now();
         const tenMinutes = 10 * 60 * 1000;
@@ -360,7 +365,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Function to update an individual ten-minute bar in the graph
     function updateTenMinuteBar(barId, value) {
         const barElement = document.getElementById(barId);
         const heightPercentage = Math.min((value / TEN_MINUTE_BAR_MAX_VALUE) * 100, 100);
@@ -375,7 +379,6 @@ document.addEventListener('DOMContentLoaded', function () {
         barElement.parentNode.dataset.value = value;
     }
 
-    // Event listeners for showing tooltips on bars
     const bars = document.querySelectorAll('.t-bar');
     const tooltip = document.getElementById('tooltip');
 
@@ -420,37 +423,11 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Initial setup to load stored values and update the UI
-    chrome.storage.local.get(['inviting', 'inviteCount', 'lastInviteCount', 'inviteTimestamps', 'remainingInvites', 'scrolling', 'milestoneTimestamp'], function (result) {
-        if (result.inviting) {
-            toggleButton.innerText = translations[currentLanguage].running;
-            toggleButton.classList.add('active');
-        } else {
-            resetToggleButton();
-        }
-        if (result.scrolling) {
-            scrollToggleButton.innerHTML = `${translations[currentLanguage].invitesLoaded}<span class="bold">${formatNumberWithSpaces(result.visibleInvites || 0)}</span>`;
-            scrollToggleButton.classList.add('active');
-            startScrolling();
-        } else {
-            scrollToggleButton.innerHTML = `${translations[currentLanguage].invitesLoaded}<span class="bold">0</span>`;
-        }
-        if (result.milestoneTimestamp) {
-            milestoneTimestamp = result.milestoneTimestamp;
-        }
-        updateCounter();
-        // Load version from the manifest
-        const manifest = chrome.runtime.getManifest();
-        versionValue.innerText = manifest.version;
-    });
-
-    // Set an interval to update the counter every second
     setInterval(updateCounter, 1000);
 
-    // Function to update the UI based on the current state
     function updateUIBasedOnState() {
         chrome.storage.local.get(['inviting', 'remainingInvites'], function (result) {
-            const t = translations[currentLanguage];
+            const t = translations;
             if (result.inviting) {
                 toggleButton.innerText = t.running;
             } else {
