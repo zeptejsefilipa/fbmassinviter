@@ -50,26 +50,15 @@ async function autoInvite() {
     const result = await chrome.storage.local.get(['inviting']);
     if (!result.inviting) return;
 
-// Seznam hodnot aria-label pro tlačítka pozvání v různých jazycích
-const labels = [
-    "Pozvat", "Invite", "邀请", "Invitar", "आमंत्रित करना", "دعوة", "আমন্ত্রণ জানানো", "Convidar", 
-    "Пригласить", "招待する", "ਨਿਮੰਤਰਣ ਦੇਣਾ", "دعوت دینا", "Mengundang", "Einladen", "Inviter", 
-    "Kualika", "आमंत्रित करणे", "ఆహ్వానించు", "அழைக்க", "Davet etmek", "Mời", "초대하다", 
-    "Invitare", "เชิญ", "આમંત્રિત કરવું", "Zaprosić", "Запросити", "ಆಹ್ವಾನಿಸು", "Menjemput", 
-    "دعوت کردن", "Gayyata"
-];
+    // Labels for invite buttons in various languages
+    const inviteButtons = document.querySelectorAll('div[role="button"][aria-label="Pozvat"], div[role="button"][aria-label="Invite"], div[role="button"][aria-label="邀请"], div[role="button"][aria-label="Invitar"], div[role="button"][aria-label="आमंत्रित करना"], div[role="button"][aria-label="دعوة"], div[role="button"][aria-label="আমন্ত্রণ জানানো"], div[role="button"][aria-label="Convidar"], div[role="button"][aria-label="Пригласить"], div[role="button"][aria-label="招待する"], div[role="button"][aria-label="ਨਿਮੰਤਰਣ ਦੇਣਾ"], div[role="button"][aria-label="دعوت دینا"], div[role="button"][aria-label="Mengundang"], div[role="button"][aria-label="Einladen"], div[role="button"][aria-label="Inviter"], div[role="button"][aria-label="Kualika"], div[role="button"][aria-label="आमंत्रित करणे"], div[role="button"][aria-label="ఆహ్వానించు"], div[role="button"][aria-label="அழைக்க"], div[role="button"][aria-label="Davet etmek"], div[role="button"][aria-label="Mời"], div[role="button"][aria-label="초대하다"], div[role="button"][aria-label="Invitare"], div[role="button"][aria-label="เชิญ"], div[role="button"][aria-label="આમંત્રિત કરવું"], div[role="button"][aria-label="Zaprosić"], div[role="button"][aria-label="Запросити"], div[role="button"][aria-label="ಆಹ್ವಾನಿಸು"], div[role="button"][aria-label="Menjemput"], div[role="button"][aria-label="دعوت کردن"], div[role="button"][aria-label="Gayyata"]');
 
-const selectors = labels.map(label => `div[role="button"][aria-label="${label}"]`).join(', ');
-const inviteButtons = document.querySelectorAll(selectors);
+    for (let button of inviteButtons) {
+      if (!(await chrome.storage.local.get(['inviting'])).inviting) return;
 
-for (let button of inviteButtons) {
-    const { inviting } = await chrome.storage.local.get('inviting');
-    if (!inviting) return;
-
-    button.click();
-    // Wait for 3 seconds between individual clicks
-    await sleep(3000);
-}
+      button.click();
+      // Wait for 3 seconds between individual clicks
+      await sleep(3000);
 
       // Increase the invite count in storage and add a timestamp
       const countResult = await chrome.storage.local.get(['inviteCount', 'inviteTimestamps']);

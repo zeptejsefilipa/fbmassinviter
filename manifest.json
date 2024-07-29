@@ -6,7 +6,7 @@
   "name": "FbMassInviter",
 
   // The version of the extension
-  "version": "2.0.3",
+  "version": "2.0.2",
 
   // A brief description of the extension
   "description": "Automation of invitations targeting visitors of Facebook pages who clicked 'Like' on posts.",
@@ -45,14 +45,5 @@
       "48": "icons/icon-inactive.png",  // Icon for 48x48 size
       "128": "icons/icon-inactive.png"  // Icon for 128x128 size
     }
-  },
-
-  // Web accessible resources configuration
-  "web_accessible_resources": [
-    {
-      "resources": ["lang/*.json"],
-      "matches": ["<all_urls>"]
-    }
-  ]
+  }
 }
-
