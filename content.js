@@ -1,3 +1,6 @@
+// Define the sleep duration in milliseconds
+const SLEEP_CLICK_DURATION = 2500;
+
 // Function to pause execution for a given number of milliseconds
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -57,8 +60,8 @@ async function autoInvite() {
       if (!(await chrome.storage.local.get(['inviting'])).inviting) return;
 
       button.click();
-      // Wait for 3 seconds between individual clicks
-      await sleep(3000);
+      // Wait for 2,5 seconds between individual clicks
+      await sleep(SLEEP_CLICK_DURATION);
 
       // Increase the invite count in storage and add a timestamp
       const countResult = await chrome.storage.local.get(['inviteCount', 'inviteTimestamps']);
@@ -91,8 +94,8 @@ async function autoInvite() {
       scrollContainer.scrollBy(0, window.innerHeight);
     }
 
-    // Wait for 2 seconds before the next loop iteration
-    await sleep(2000);
+    // Wait for 2,5 seconds before the next loop iteration
+    await sleep(SLEEP_CLICK_DURATION);
   }
 }
 
