@@ -6,12 +6,12 @@ document.addEventListener('DOMContentLoaded', function () {
     const MAX_INVITES_4HOURS = 1800;  // Maximum number of invites allowed in a 4-hour period
     const MAX_INVITES_24HOURS = 7000;  // Maximum number of invites allowed in a 24-hour period
     const MAX_INVITES_MILESTONE = 20000;  // Maximum number of invites allowed since a certain milestone
-    const MAX_INVITES_REMAINING = 1200;  // Maximum number of remaining invites before hitting a limit
+    const MAX_INVITES_REMAINING = 1440;  // Maximum number of remaining invites before hitting a limit
     const MAX_VISIBLE_INVITES = 9900;  // Maximum number of visible invites in the UI
-    const MAX_BAR_HEIGHT = 1200;  // Max value for 1h bar in pixels; over-limit values color the column red
+    const MAX_BAR_HEIGHT = 1440;  // Max value for 1h bar in pixels; over-limit values color the column red
     const MAX_TEN_MINUTE_BARS = 24;  // Maximum number of ten-minute bars in the graph
     const TEN_MINUTE_INTERVAL = 10 * 60 * 1000;  // Interval for each ten-minute bar in milliseconds (10 minutes)
-    const TEN_MINUTE_BAR_MAX_VALUE = 200;  // Max value represented by px height for 10m t-bar, over-limit values color the column red
+    const TEN_MINUTE_BAR_MAX_VALUE = 240;  // Max value represented by px height for 10m t-bar, over-limit values color the column red
     const languageSwitcher = document.getElementById('bopis');  // Reference to the language switcher element in the popup
 
     const colors = [
