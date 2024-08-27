@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const MAX_INVITES_4HOURS = 1800;  // Maximum number of invites allowed in a 4-hour period
     const MAX_INVITES_24HOURS = 7000;  // Maximum number of invites allowed in a 24-hour period
     const MAX_INVITES_MILESTONE = 20000;  // Maximum number of invites allowed since a certain milestone
-    const MAX_INVITES_REMAINING = 1440;  // Maximum number of remaining invites before hitting a limit
+    const MAX_INVITES_REMAINING = 1800;  // Limit value for ban zone
     const MAX_VISIBLE_INVITES = 9900;  // Maximum number of visible invites in the UI
     const MAX_BAR_HEIGHT = 1440;  // Max value for 1h bar in pixels; over-limit values color the column red
     const MAX_TEN_MINUTE_BARS = 24;  // Maximum number of ten-minute bars in the graph
@@ -284,11 +284,16 @@ document.addEventListener('DOMContentLoaded', function () {
         if (visibleInvites <= 0) {
             completionEstimateElement.innerText = translations[currentLanguage].done;
         } else {
-            const secondsRemaining = visibleInvites * 2;
-            const minutes = Math.floor(secondsRemaining / 60);
-            const seconds = secondsRemaining % 60;
-            const minutesText = minutes.toString();
-            const secondsText = seconds.toString();
+            // Multiply the number of visible invites by 2.5 seconds (should be the same value as in SLEEP_CLICK_DURATION content.js)
+            const secondsRemaining = visibleInvites * 2.5;
+
+            // Round up the seconds to the nearest whole number
+            const roundedSecondsRemaining = Math.ceil(secondsRemaining);
+            
+            const minutes = Math.floor(roundedSecondsRemaining / 60);
+            const seconds = roundedSecondsRemaining % 60;
+            const minutesText = minutes.toString(); // Display minutes without leading zero
+            const secondsText = seconds.toString(); // Display seconds without leading zero
 
             completionEstimateElement.innerText = `~${minutesText}m ${secondsText}s`;
         }
