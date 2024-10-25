@@ -53,6 +53,6 @@ License
 FbMassInviter is licensed under the GNU General Public License, version 3. See GNU_GPL_V3.txt for the full license text.
 
 For more information, visit the project page or contact the author Filip Novák.
-CS: https://zsf.cz/fbmassinviter En: https://askfilipshow.com/fbmassinviter
+CS: https://zsf.cz En: https://askfilipshow.com
 
 Feel free to contribute to the project by submitting issues or pull requests. Your feedback and contributions are highly appreciated!

@@ -1,7 +1,7 @@
 // Encapsulate the script in an IIFE to avoid polluting the global scope
 (() => {
   // Define the sleep duration in milliseconds
-  const SLEEP_CLICK_DURATION = 2500;
+  const SLEEP_CLICK_DURATION = 3500;
 
   // Function to pause execution for a given number of milliseconds
   function sleep(ms) {

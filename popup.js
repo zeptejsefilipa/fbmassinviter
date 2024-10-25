@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
             done: 'Done',
             author: 'Author: Filip Novák',
             authorLink: 'AskFilipShow.com',
-            authorUrl: 'https://askfilipshow.com/fbmassinviter'
+            authorUrl: 'https://askfilipshow.com'
         },
         cs: {
             start: 'SPUSTIT',
@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function () {
             done: 'Dokončeno',
             author: 'Autor: Filip Novák',
             authorLink: 'ZeptejSeFilipa (zsf.cz)',
-            authorUrl: 'https://zsf.cz/fbmassinviter'
+            authorUrl: 'https://zsf.cz'
         }
     };
 
@@ -284,8 +284,8 @@ document.addEventListener('DOMContentLoaded', function () {
         if (visibleInvites <= 0) {
             completionEstimateElement.innerText = translations[currentLanguage].done;
         } else {
-            // Multiply the number of visible invites by 2.5 seconds (should be the same value as in SLEEP_CLICK_DURATION content.js)
-            const secondsRemaining = visibleInvites * 2.5;
+            // Multiply the number of visible invites by 3.5 seconds (should be the same value as in SLEEP_CLICK_DURATION content.js)
+            const secondsRemaining = visibleInvites * 3.5;
 
             // Round up the seconds to the nearest whole number
             const roundedSecondsRemaining = Math.ceil(secondsRemaining);
